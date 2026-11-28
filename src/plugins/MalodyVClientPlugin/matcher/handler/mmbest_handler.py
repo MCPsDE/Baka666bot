@@ -4,7 +4,7 @@ from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment
 from nonebot.log import logger
 
 from ...MalodyAPI.ranking.best import get_best
-from ...MalodyAPI.database import db
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 from ...MalodyAPI.player.search import search_player
 from ...MalodyAPI.player.info import get_player_info
 from ...MalodyAPI.ranking.player.all import get_ranking_player_all
@@ -93,13 +93,9 @@ def _is_param_token(token: str) -> bool:
 async def process_best(bot: Bot, event: Event, args: str):
     """处理 /mb 命令，查询 best 成绩并发送图片。支持查询自己或指定玩家。"""
     qq = str(event.get_user_id())
-    user_uid = await db.get_uid_by_qq(qq)
-    if not user_uid:
-        await bot.send(event, "请先使用 /login <用户名> 或 /login #uid 登录并绑定账号")
-        return
-    user = await db.get_user(user_uid)
-    if not user or not user.get("access_token"):
-        await bot.send(event, "未找到有效的 access_token，请重新登录")
+    user_uid, user = await get_user_creds(qq)
+    if not user:
+        await bot.send(event, BIND_GUIDE_TEXT)
         return
 
     plain = args.strip().split()

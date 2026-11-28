@@ -2,7 +2,7 @@
 import asyncio
 from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment
 from nonebot.log import logger
-from .user_utils import get_user_creds
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 from ...MalodyAPI.core import _paginate
 from ...render.components import list_view
 
@@ -10,7 +10,7 @@ async def handle(bot: Bot, event: Event, args: str):
     qq = str(event.get_user_id())
     uid, user = await get_user_creds(qq)
     if not user or not user.get("store_token"):
-        await bot.send(event, "请先 /login 登录"); return
+        await bot.send(event, BIND_GUIDE_TEXT); return
     mode, count = "0", 50
     for p in args.strip().split():
         if p.isdigit() and len(p) == 1: mode = p

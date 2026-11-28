@@ -2,7 +2,7 @@
 import asyncio, datetime
 from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment
 from nonebot.log import logger
-from .user_utils import get_user_creds
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 from ...MalodyAPI.player.info import get_player_info
 from ...MalodyAPI.ranking.player.all import get_ranking_player_all
 from ...MalodyAPI.player.search import search_player
@@ -11,7 +11,7 @@ from ...render.components import profile_card
 async def handle(bot: Bot, event: Event, args: str):
     qq = str(event.get_user_id())
     uid, user = await get_user_creds(qq)
-    if not user: await bot.send(event, "请先 /login 登录"); return
+    if not user: await bot.send(event, BIND_GUIDE_TEXT); return
     touid, name_hint = uid, user.get("username", uid)
     if args.strip():
         kw = args.strip()

@@ -2,14 +2,14 @@
 import asyncio
 from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment
 from nonebot.log import logger
-from .user_utils import get_user_creds
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 from ...MalodyAPI.community.chart.info import get_chart_info
 from ...render.components import chart_card
 
 async def handle(bot: Bot, event: Event, args: str):
     qq = str(event.get_user_id())
     uid, user = await get_user_creds(qq)
-    if not user: await bot.send(event, "请先 /login 登录"); return
+    if not user: await bot.send(event, BIND_GUIDE_TEXT); return
     cid = args.strip()
     if not cid or not cid.isdigit(): await bot.send(event, "用法: ma chart <CID>"); return
     try:

@@ -2,7 +2,7 @@
 import asyncio
 from nonebot.adapters.onebot.v11 import Bot, Event
 from nonebot.log import logger
-from .user_utils import get_user_creds
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 from ...MalodyAPI.ranking.player.all import get_ranking_player_all
 from ...MalodyAPI.player.search import search_player
 
@@ -14,7 +14,7 @@ async def handle(bot: Bot, event: Event, args: str):
     qq = str(event.get_user_id())
     uid, user = await get_user_creds(qq)
     if not user:
-        await bot.send(event, "请先使用 /login <用户名> 登录并绑定账号")
+        await bot.send(event, BIND_GUIDE_TEXT)
         return
 
     touid = uid

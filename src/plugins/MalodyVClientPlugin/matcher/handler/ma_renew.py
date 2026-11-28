@@ -1,24 +1,12 @@
-"""ma renew - 刷新令牌"""
-import asyncio
+"""ma renew - 刷新云端会话令牌"""
 from nonebot.adapters.onebot.v11 import Bot, Event
-from .user_utils import get_user_creds
-from ...MalodyAPI.account.renew import renew_token
-from ...MalodyAPI.database import db
+from .user_utils import BIND_GUIDE_TEXT, get_user_creds
 
 
 async def handle(bot: Bot, event: Event, args: str):
     qq = str(event.get_user_id())
-    uid, user = await get_user_creds(qq)
+    uid, user = await get_user_creds(qq, force_refresh=True)
     if not user:
-        await bot.send(event, "请先 /login 登录")
+        await bot.send(event, BIND_GUIDE_TEXT)
         return
-    try:
-        r = await asyncio.to_thread(renew_token, access_token=user["access_token"], uid=uid)
-        if r.get("code") == 0:
-            new_token = r.get("token", user["access_token"])
-            await db.save_user(uid=uid, device_id=user["device_id"], store_token=user.get("store_token", ""), access_token=new_token, is_login=True)
-            await bot.send(event, "令牌已刷新")
-        else:
-            await bot.send(event, "刷新失败，请重新 /login")
-    except Exception:
-        await bot.send(event, "刷新失败")
+    await bot.send(event, f"已从云端刷新令牌：{user.get('username', uid)} (UID: {uid})")

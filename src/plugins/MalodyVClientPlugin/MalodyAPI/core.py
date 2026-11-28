@@ -10,6 +10,7 @@ from nonebot import get_driver
 _config = get_driver().config
 
 API_BASE: str = getattr(_config, "malody_api_base", "https://api.mugzone.net")
+SITE_BASE: str = getattr(_config, "malody_site_base", "https://malody.top").rstrip("/")
 MALODY_VERSION: str = getattr(_config, "malody_version", "6.6.43")
 VER: str = getattr(_config, "malody_ver", "394795")
 STORE_API: int = int(getattr(_config, "malody_store_api", "202409"))
